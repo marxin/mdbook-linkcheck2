@@ -1,6 +1,6 @@
 [package]
 name = "mdbook-linkcheck2"
-version = "0.8.1"
+version = "0.8.2"
 authors = [
     "Michael Bryan <michaelfbryan@gmail.com>",
     "Martin Liška <martin.liska@hey.com>",
@@ -19,24 +19,24 @@ path = "src/bin/mdbook-linkcheck.rs"
 doc = false
 
 [dependencies]
-anyhow = "1"
+anyhow = "1.0.95"
 codespan = { version = "0.11.1" }
 codespan-reporting = "0.11"
 dunce = "1"
-env_logger = "0.11"
-http = "1.1"
-linkcheck2 = "0.5.0"
+env_logger = "0.11.6"
+http = "1.2"
+linkcheck2 = "0.6.0"
 log = "0.4"
-mdbook = { version = "0.4", default-features = false }
+mdbook = { version = "0.4.43", default-features = false }
 pulldown-cmark = "0.12.2"
-regex = "1"
-reqwest = "0.12.8"
-semver = "1"
-serde = { version = "1", features = ["derive"] }
-serde_derive = "1"
-serde_json = "1"
+regex = "1.11.1"
+reqwest = "0.12.11"
+semver = "1.0.24"
+serde = { version = "1.0.217", features = ["derive"] }
+serde_derive = "1.0.217"
+serde_json = "1.0.134"
 structopt = "0.3"
-tokio = { version = "1.40", features = ["rt-multi-thread"] }
+tokio = { version = "1.42", features = ["rt-multi-thread"] }
 
 [dev-dependencies]
 pretty_assertions = "1"
