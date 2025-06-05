@@ -4,7 +4,7 @@ multilingual = false
 src = "src"
 title = "All Green"
 
-[output.linkcheck]
+[output.linkcheck2]
 follow-web-links = true
 exclude = [".*nonexistent.*"]
 
