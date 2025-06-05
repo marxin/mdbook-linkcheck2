@@ -75,7 +75,7 @@ where
 fn archive_name(outdir: &Path) -> Result<PathBuf, Error> {
     let BuildInfo { compiler, .. } = get_build_info();
 
-    let filename = format!("mdbook-linkcheck.{}.zip", compiler.host_triple);
+    let filename = format!("mdbook-linkcheck2.{}.zip", compiler.host_triple);
 
     Ok(outdir.join(filename))
 }
@@ -84,7 +84,7 @@ fn compile_binary() -> Result<PathBuf, Error> {
     let status = Command::new("cargo")
         .arg("build")
         .arg("--release")
-        .arg("--package=mdbook-linkcheck")
+        .arg("--package=mdbook-linkcheck2")
         .status()
         .context("Unable to invoke `cargo`")?;
     anyhow::ensure!(status.success(), "Cargo returned an error");
@@ -92,9 +92,9 @@ fn compile_binary() -> Result<PathBuf, Error> {
     let release_dir = TARGET_DIR.join("release");
 
     let filename = if cfg!(windows) {
-        "mdbook-linkcheck.exe"
+        "mdbook-linkcheck2.exe"
     } else {
-        "mdbook-linkcheck"
+        "mdbook-linkcheck2"
     };
     let binary = release_dir.join(filename);
     log::info!("Compiled to \"{}\"", binary.display());

@@ -130,7 +130,7 @@ pub fn version_check(version: &str) -> Result<(), Error> {
         Ok(())
     } else {
         let msg = format!(
-            "mdbook-linkcheck isn't compatible with this version of mdbook ({} is not in the range {})",
+            "mdbook-linkcheck2 isn't compatible with this version of mdbook ({} is not in the range {})",
             found, constraints
         );
         Err(Error::msg(msg))

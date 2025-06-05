@@ -97,7 +97,7 @@ warning-policy = "warn"
 # the "Accept: text/html" header
 'crates\.io' = ["Accept: text/html"]
 
-# mdbook-linkcheck will interpolate environment variables into your header via
+# mdbook-linkcheck2 will interpolate environment variables into your header via
 # $IDENT.
 #
 # If this is not what you want you must escape the `$` symbol, like `\$TOKEN`.
@@ -111,7 +111,7 @@ warning-policy = "warn"
 
 ## Continuous Integration
 
-Incorporating `mdbook-linkcheck` into your CI system should be straightforward
+Incorporating `mdbook-linkcheck2` into your CI system should be straightforward
 if you are already [using `mdbook` to generate documentation][mdbook-ci].
 
 For those using GitLab's built-in CI:
