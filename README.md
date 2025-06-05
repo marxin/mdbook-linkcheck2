@@ -140,16 +140,9 @@ pages:
     - cp -r $BOOK_DIR/book/html public
   artifacts:
     paths:
-    - public
+      - public
   only:
     - master
 ```
 
-The [michaelfbryan/mdbook-docker-image][image] docker image is also available
-on Docker hub and comes with the latest version of `mdbook` and
-`mdbook-linkcheck` pre-installed.
-
-[releases]: https://github.com/Michael-F-Bryan/mdbook-linkcheck/releases
 [mdbook-ci]: https://rust-lang.github.io/mdBook/continuous-integration.html
-[Michael-F-Bryan]: https://github.com/Michael-F-Bryan
-[image]: https://hub.docker.com/r/michaelfbryan/mdbook-docker-image
