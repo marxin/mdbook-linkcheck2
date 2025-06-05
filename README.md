@@ -28,7 +28,7 @@ authors = ["Michael-F-Bryan"]
 
 [output.html]
 
-[output.linkcheck]
+[output.linkcheck2]
 ```
 
 And finally you should be able to run `mdbook build` like normal and everything
@@ -49,12 +49,12 @@ $ mdbook build
 ## Configuration
 
 The link checker's behaviour can be configured by setting options under the
-`output.linkcheck` table in your `book.toml`.
+`output.linkcheck2` table in your `book.toml`.
 
 ```toml
 ...
 
-[output.linkcheck]
+[output.linkcheck2]
 # Should we check links on the internet? Enabling this option adds a
 # non-negligible performance impact
 follow-web-links = false
@@ -92,12 +92,12 @@ warning-policy = "warn"
 # This is a dictionary (map), with keys being regexes
 # matching a set of web sites, and values being an array of
 # the headers.
-[output.linkcheck.http-headers]
+[output.linkcheck2.http-headers]
 # Any hyperlink that contains this regexp will be sent
 # the "Accept: text/html" header
 'crates\.io' = ["Accept: text/html"]
 
-# mdbook-linkcheck will interpolate environment variables into your header via
+# mdbook-linkcheck2 will interpolate environment variables into your header via
 # $IDENT.
 #
 # If this is not what you want you must escape the `$` symbol, like `\$TOKEN`.
@@ -111,7 +111,7 @@ warning-policy = "warn"
 
 ## Continuous Integration
 
-Incorporating `mdbook-linkcheck` into your CI system should be straightforward
+Incorporating `mdbook-linkcheck2` into your CI system should be straightforward
 if you are already [using `mdbook` to generate documentation][mdbook-ci].
 
 For those using GitLab's built-in CI:
@@ -140,16 +140,9 @@ pages:
     - cp -r $BOOK_DIR/book/html public
   artifacts:
     paths:
-    - public
+      - public
   only:
     - master
 ```
 
-The [michaelfbryan/mdbook-docker-image][image] docker image is also available
-on Docker hub and comes with the latest version of `mdbook` and
-`mdbook-linkcheck` pre-installed.
-
-[releases]: https://github.com/Michael-F-Bryan/mdbook-linkcheck/releases
 [mdbook-ci]: https://rust-lang.github.io/mdBook/continuous-integration.html
-[Michael-F-Bryan]: https://github.com/Michael-F-Bryan
-[image]: https://hub.docker.com/r/michaelfbryan/mdbook-docker-image

@@ -110,13 +110,13 @@ pub fn run(
     }
 }
 
-/// Get the configuration used by `mdbook-linkcheck`.
+/// Get the configuration used by `mdbook-linkcheck2`.
 pub fn get_config(cfg: &mdbook::Config) -> Result<Config, Error> {
-    match cfg.get("output.linkcheck") {
+    match cfg.get("output.linkcheck2") {
         Some(raw) => raw
             .clone()
             .try_into()
-            .context("Unable to deserialize the `output.linkcheck` table."),
+            .context("Unable to deserialize the `output.linkcheck2` table."),
         None => Ok(Config::default()),
     }
 }
@@ -130,7 +130,7 @@ pub fn version_check(version: &str) -> Result<(), Error> {
         Ok(())
     } else {
         let msg = format!(
-            "mdbook-linkcheck isn't compatible with this version of mdbook ({} is not in the range {})",
+            "mdbook-linkcheck2 isn't compatible with this version of mdbook ({} is not in the range {})",
             found, constraints
         );
         Err(Error::msg(msg))
