@@ -1,6 +1,4 @@
 [book]
 authors = ["Michael-F-Bryan"]
 language = "en"
-multilingual = false
-src = "src"
 title = "Absolute Links Fixture"

@@ -1,5 +1,3 @@
 [book]
 authors = ["Michael Bryan"]
-multilingual = false
-src = "src"
 title = "Broken Links"
