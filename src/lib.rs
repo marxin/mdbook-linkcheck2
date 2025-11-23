@@ -23,7 +23,7 @@
 extern crate pretty_assertions;
 
 /// A semver range specifying which versions of `mdbook` this crate supports.
-pub const COMPATIBLE_MDBOOK_VERSIONS: &str = "^0.4.0";
+pub const COMPATIBLE_MDBOOK_VERSIONS: &str = "^0.5.1";
 
 mod config;
 mod context;
@@ -47,9 +47,9 @@ use codespan_reporting::{
     term::termcolor::{ColorChoice, StandardStream},
 };
 use linkcheck2::validation::Cache;
-use mdbook::{
+use mdbook_renderer::{
     book::{Book, BookItem},
-    renderer::RenderContext,
+    RenderContext,
 };
 use semver::{Version, VersionReq};
 use std::{fs::File, path::Path};
@@ -76,7 +76,7 @@ pub fn run(
     log::info!("Started the link checker");
     log::debug!("Selected files for web links: {:?}", selected_files);
 
-    let cfg = crate::get_config(&ctx.config)?;
+    let cfg = ctx.config.get("output.linkcheck")?.unwrap_or_default();
     crate::version_check(&ctx.version)?;
 
     if log::log_enabled!(log::Level::Trace) {
@@ -107,17 +107,6 @@ pub fn run(
     } else {
         log::info!("No broken links found");
         Ok(())
-    }
-}
-
-/// Get the configuration used by `mdbook-linkcheck`.
-pub fn get_config(cfg: &mdbook::Config) -> Result<Config, Error> {
-    match cfg.get("output.linkcheck") {
-        Some(raw) => raw
-            .clone()
-            .try_into()
-            .context("Unable to deserialize the `output.linkcheck` table."),
-        None => Ok(Config::default()),
     }
 }
 
@@ -267,7 +256,7 @@ mod tests {
 
     #[test]
     fn always_stay_compatible_with_mdbook_dependency() {
-        let got = version_check(mdbook::MDBOOK_VERSION);
+        let got = version_check(mdbook_renderer::MDBOOK_VERSION);
 
         assert!(
             got.is_ok(),

@@ -4,11 +4,9 @@ extern crate pretty_assertions;
 use anyhow::Error;
 use codespan::{FileId, Files};
 use linkcheck2::validation::{Cache, Reason};
-use mdbook::{
-    renderer::{RenderContext, Renderer},
-    MDBook,
-};
+use mdbook_driver::MDBook;
 use mdbook_linkcheck2::{Config, HashedRegex, ValidationOutcome, WarningPolicy};
+use mdbook_renderer::{RenderContext, Renderer};
 use std::{
     cell::Cell,
     collections::HashMap,
