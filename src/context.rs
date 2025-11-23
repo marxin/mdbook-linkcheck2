@@ -26,7 +26,7 @@ impl linkcheck2::validation::Context for Context<'_> {
         &self.filesystem_options
     }
 
-    fn cache(&self) -> Option<MutexGuard<Cache>> {
+    fn cache(&self) -> Option<MutexGuard<'_, Cache>> {
         Some(self.cache.lock().expect("Lock was poisoned"))
     }
 
