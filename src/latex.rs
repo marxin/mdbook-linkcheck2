@@ -1,6 +1,9 @@
 /// This module provides an (experimental ad-hoc) functionality of
 /// supporting latex in `mdbook-linkcheck`.
 use std::collections::HashSet;
+use crate::{
+    config::Config,
+};
 
 /// A struct that maps text changes from file B to file A, where file
 /// A is original and B is modified. It is used to map back error
@@ -114,7 +117,7 @@ impl ByteIndexMap {
 
 /// Filters out latex code snippets from md files to avoid false link
 /// matches.
-pub(crate) fn filter_out_latex(src: &str) -> (String, ByteIndexMap) {
+pub(crate) fn filter_out_latex_or_katex(src: &str, cfg: &Config,) -> (String, ByteIndexMap) {
     use regex::Regex;
 
     let mut byte_index_map = ByteIndexMap::new();
@@ -146,17 +149,26 @@ pub(crate) fn filter_out_latex(src: &str) -> (String, ByteIndexMap) {
         src = reg.replace_all(&src, replacement).to_string();
     };
 
-    // Everything between a pair of $$ including newlines
-    process_regex(r"\$\$[^\$]*\$\$", "LATEX_DOUBLE_DOLLAR_SUBSTITUTED");
-    // Everything between a pair of $ excluding newlines
-    process_regex(r"\$[^\$\n\r]*\$", "LATEX_SINGLE_DOLLAR_SUBSTITUTED");
-    // Everything between \( and \) excluding newlines
-    process_regex(r"\\\([^\n\r]*\\\)", "LATEX_ESCAPED_PARENTHESIS_SUBSTITUTED");
-    // Everything between \[ and \] including newlines
-    process_regex(
-        r"\\\[(.|\r\n|\r|\n)*\\\]",
-        "LATEX_ESCAPED_SQUARE_BRACKET_SUBSTITUTED",
-    );
+    if cfg.katex_support {
+        process_regex(
+            r#"<span class="katex">.*</span>"#,
+            "katex"
+        );
+    }
+
+    if cfg.latex_support {
+        // Everything between a pair of $$ including newlines
+        process_regex(r"\$\$[^\$]*\$\$", "LATEX_DOUBLE_DOLLAR_SUBSTITUTED");
+        // Everything between a pair of $ excluding newlines
+        process_regex(r"\$[^\$\n\r]*\$", "LATEX_SINGLE_DOLLAR_SUBSTITUTED");
+        // Everything between \( and \) excluding newlines
+        process_regex(r"\\\([^\n\r]*\\\)", "LATEX_ESCAPED_PARENTHESIS_SUBSTITUTED");
+        // Everything between \[ and \] including newlines
+        process_regex(
+            r"\\\[(.|\r\n|\r|\n)*\\\]",
+            "LATEX_ESCAPED_SQUARE_BRACKET_SUBSTITUTED",
+        );
+    }
 
     // println!("\n\n\nFile after: {}", src);
 
