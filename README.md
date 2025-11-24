@@ -28,7 +28,7 @@ authors = ["Michael-F-Bryan"]
 
 [output.html]
 
-[output.linkcheck]
+[output.linkcheck2]
 ```
 
 And finally you should be able to run `mdbook build` like normal and everything
@@ -48,13 +48,13 @@ $ mdbook build
 
 ## Configuration
 
-The link checker's behaviour can be configured by setting options under the
-`output.linkcheck` table in your `book.toml`.
+The link checker's behaviour can be configured by setting options under the `output.linkcheck2` table in your `book.toml`
+(for backwards compatibility, `output.linkcheck` is also supported).
 
 ```toml
 ...
 
-[output.linkcheck]
+[output.linkcheck2]
 # Should we check links on the internet? Enabling this option adds a
 # non-negligible performance impact
 follow-web-links = false
@@ -92,7 +92,7 @@ warning-policy = "warn"
 # This is a dictionary (map), with keys being regexes
 # matching a set of web sites, and values being an array of
 # the headers.
-[output.linkcheck.http-headers]
+[output.linkcheck2.http-headers]
 # Any hyperlink that contains this regexp will be sent
 # the "Accept: text/html" header
 'crates\.io' = ["Accept: text/html"]

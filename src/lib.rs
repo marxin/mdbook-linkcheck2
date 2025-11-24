@@ -76,7 +76,11 @@ pub fn run(
     log::info!("Started the link checker");
     log::debug!("Selected files for web links: {:?}", selected_files);
 
-    let cfg = ctx.config.get("output.linkcheck")?.unwrap_or_default();
+    let cfg = ctx
+        .config
+        .get("output.linkcheck2")?
+        .unwrap_or_else(|| ctx.config.get("output.linkcheck").ok()?)
+        .unwrap_or_default();
     crate::version_check(&ctx.version)?;
 
     if log::log_enabled!(log::Level::Trace) {

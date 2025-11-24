@@ -316,7 +316,7 @@ but users viewing the book from the file system may encounter broken links.
 To ignore this warning, you can edit `book.toml` and set the warning policy to
 "ignore".
 
-    [output.linkcheck]
+    [output.linkcheck2]
     warning-policy = "ignore"
 
 For more details, see https://github.com/Michael-F-Bryan/mdbook-linkcheck/issues/33

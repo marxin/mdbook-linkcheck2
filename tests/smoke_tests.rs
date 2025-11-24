@@ -301,7 +301,7 @@ impl TestRun {
         assert!(self.root.exists());
 
         let mut md = MDBook::load(&self.root).unwrap();
-        md.config.set("output.linkcheck", &self.config).unwrap();
+        md.config.set("output.linkcheck2", &self.config).unwrap();
 
         md.execute_build_process(&self)?;
 

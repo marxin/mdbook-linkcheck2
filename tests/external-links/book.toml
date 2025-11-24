@@ -2,7 +2,7 @@
 authors = ["Michael Bryan"]
 title = "External links"
 
-[output.linkcheck]
+[output.linkcheck2]
 follow-web-links = false
 
 [output.html]
