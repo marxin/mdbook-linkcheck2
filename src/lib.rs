@@ -236,11 +236,10 @@ fn load_cache(filename: &Path) -> Cache {
 }
 
 fn save_cache(filename: &Path, cache: &Cache) {
-    if let Some(parent) = filename.parent() {
-        if let Err(e) = std::fs::create_dir_all(parent) {
+    if let Some(parent) = filename.parent()
+        && let Err(e) = std::fs::create_dir_all(parent) {
             log::warn!("Unable to create the cache's directory: {}", e);
         }
-    }
 
     log::debug!("Saving the cache to {}", filename.display());
 

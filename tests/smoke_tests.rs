@@ -148,7 +148,7 @@ fn emit_valid_suggestions_on_absolute_links() {
             ];
             assert_eq!(suggestions.len(), diags.len());
 
-            for (diag, suggestion) in diags.into_iter().zip(suggestions.into_iter()) {
+            for (diag, suggestion) in diags.into_iter().zip(suggestions) {
                 assert!(
                     diag.notes.iter().any(|note| note.contains(suggestion)),
                     "It should have suggested {} for {:?}",
@@ -215,10 +215,10 @@ fn is_specific_error<E>(reason: &Reason) -> bool
 where
     E: std::error::Error + 'static,
 {
-    if let Reason::Io(io) = reason {
-        if let Some(inner) = io.get_ref() {
-            return inner.is::<E>();
-        }
+    if let Reason::Io(io) = reason
+        && let Some(inner) = io.get_ref()
+    {
+        return inner.is::<E>();
     }
 
     false

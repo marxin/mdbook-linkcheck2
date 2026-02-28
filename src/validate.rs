@@ -110,14 +110,11 @@ fn ensure_included_in_book(
         if was_included_in_summary || !is_markdown {
             Ok(())
         } else {
-            use std::io::{Error, ErrorKind};
+            use std::io::Error;
 
-            Err(Reason::Io(Error::new(
-                ErrorKind::Other,
-                NotInSummary {
-                    path: resolved_link.to_path_buf(),
-                },
-            )))
+            Err(Reason::Io(Error::other(NotInSummary {
+                path: resolved_link.to_path_buf(),
+            })))
         }
     }
 }
