@@ -7,11 +7,11 @@ authors = [
 ]
 description = "A backend for `mdbook` which will check your links for you."
 license = "MIT"
-edition = "2021"
+edition = "2024"
 documentation = "https://docs.rs/mdbook-linkcheck2"
 repository = "https://github.com/marxin/mdbook-linkcheck2"
 readme = "README.md"
-rust-version = "1.70"
+rust-version = "1.90"
 
 [[bin]]
 name = "mdbook-linkcheck2"

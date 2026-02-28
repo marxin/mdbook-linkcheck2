@@ -3,8 +3,8 @@ use anyhow::Error;
 use codespan::{FileId, Files};
 use codespan_reporting::diagnostic::{Diagnostic, Label, Severity};
 use linkcheck2::{
-    validation::{Cache, InvalidLink, Options, Outcomes, Reason},
     Category, Link,
+    validation::{Cache, InvalidLink, Options, Outcomes, Reason},
 };
 use std::{
     collections::{HashMap, HashSet},
@@ -24,6 +24,7 @@ fn lc_validate(
     web_check_files_ids: &[FileId],
     all_files_ids: &[FileId],
 ) -> Outcomes {
+    let src_dir = src_dir.to_path_buf();
     let web_check_files_ids: HashSet<_> = web_check_files_ids.iter().collect();
     let file_names = all_files_ids
         .iter()
@@ -31,14 +32,14 @@ fn lc_validate(
         .collect();
 
     let options = Options::default()
-        .with_root_directory(src_dir)
+        .with_root_directory(&src_dir)
         .expect("The source directory doesn't exist?")
         .set_alternate_extensions(vec![("html".to_string(), vec!["md".to_string()])])
         .set_links_may_traverse_the_root_directory(cfg.traverse_parent_directories)
         // take into account the `index` preprocessor which rewrites `README.md`
         // to `index.md` (which tne gets rendered as `index.html`)
         .set_default_file("README.md")
-        .set_custom_validation(ensure_included_in_book(src_dir, file_names));
+        .set_custom_validation(ensure_included_in_book(src_dir.clone(), file_names));
 
     let interpolated_headers = cfg.interpolate_headers(cfg.warning_policy);
 
@@ -49,7 +50,7 @@ fn lc_validate(
         cache: Mutex::new(cache.clone()),
         interpolated_headers,
     };
-    let links = collate_links(links, src_dir, files);
+    let links = collate_links(links, &src_dir, files);
 
     let runtime = Builder::new_multi_thread().enable_all().build().unwrap();
     let got = runtime.block_on(async {
@@ -79,11 +80,9 @@ fn lc_validate(
 }
 
 fn ensure_included_in_book(
-    src_dir: &Path,
+    src_dir: PathBuf,
     file_names: Vec<OsString>,
-) -> impl Fn(&Path, Option<&str>) -> Result<(), Reason> {
-    let src_dir = src_dir.to_path_buf();
-
+) -> impl Fn(&Path, Option<&str>) -> Result<(), Reason> + 'static {
     move |resolved_link, _| {
         let resolved_link = match resolved_link.strip_prefix(&src_dir) {
             Ok(path) => path,
@@ -263,7 +262,7 @@ impl ValidationOutcome {
 
         for incomplete in &self.incomplete_links {
             let IncompleteLink {
-                ref reference,
+                reference,
                 file,
                 span,
             } = incomplete;
@@ -353,8 +352,10 @@ For more details, see https://github.com/Michael-F-Bryan/mdbook-linkcheck/issues
             let diag = Diagnostic::new(severity)
                 .with_message("Absolute link should be made relative")
                 .with_notes(notes)
-                .with_labels(vec![Label::primary(link.file, link.span)
-                    .with_message("Absolute link should be made relative")]);
+                .with_labels(vec![
+                    Label::primary(link.file, link.span)
+                        .with_message("Absolute link should be made relative"),
+                ]);
 
             diags.push(diag);
         }

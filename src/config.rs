@@ -234,7 +234,7 @@ fn interpolate_env(value: &str) -> Result<HeaderValue, Error> {
                             return Err(Error::msg(format!(
                                 "Failed to retrieve `{}` env var: {}",
                                 name, e
-                            )))
+                            )));
                         }
                     }
                 }
@@ -295,7 +295,9 @@ https = ["accept: html/text", "authorization: Basic $TOKEN"]
 
     #[test]
     fn deserialize_a_config() {
-        std::env::set_var("TOKEN", "QWxhZGRpbjpPcGVuU2VzYW1l");
+        unsafe {
+            std::env::set_var("TOKEN", "QWxhZGRpbjpPcGVuU2VzYW1l");
+        }
 
         let should_be = Config {
             follow_web_links: true,
@@ -323,7 +325,9 @@ https = ["accept: html/text", "authorization: Basic $TOKEN"]
     fn round_trip_config() {
         // A check that a value of an env var is not leaked in the
         // deserialization
-        std::env::set_var("TOKEN", "QWxhZGRpbjpPcGVuU2VzYW1l");
+        unsafe {
+            std::env::set_var("TOKEN", "QWxhZGRpbjpPcGVuU2VzYW1l");
+        }
 
         let deserialized: Config = toml::from_str(CONFIG).unwrap();
         let reserialized = toml::to_string(&deserialized).unwrap();
@@ -333,7 +337,9 @@ https = ["accept: html/text", "authorization: Basic $TOKEN"]
 
     #[test]
     fn interpolation() {
-        std::env::set_var("SUPER_SECRET_TOKEN", "abcdefg123456");
+        unsafe {
+            std::env::set_var("SUPER_SECRET_TOKEN", "abcdefg123456");
+        }
         let header = HttpHeader {
             name: "Authorization".parse().unwrap(),
             value: "Basic $SUPER_SECRET_TOKEN".into(),

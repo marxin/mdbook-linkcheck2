@@ -36,8 +36,8 @@ pub use crate::{
     config::{Config, WarningPolicy},
     context::Context,
     hashed_regex::HashedRegex,
-    links::{extract as extract_links, IncompleteLink},
-    validate::{validate, NotInSummary, ValidationOutcome},
+    links::{IncompleteLink, extract as extract_links},
+    validate::{NotInSummary, ValidationOutcome, validate},
 };
 
 use anyhow::{Context as _, Error};
@@ -48,8 +48,8 @@ use codespan_reporting::{
 };
 use linkcheck2::validation::Cache;
 use mdbook_renderer::{
-    book::{Book, BookItem},
     RenderContext,
+    book::{Book, BookItem},
 };
 use semver::{Version, VersionReq};
 use std::{fs::File, path::Path};
@@ -144,7 +144,7 @@ where
 
     for item in book.iter() {
         match item {
-            BookItem::Chapter(ref ch) => {
+            BookItem::Chapter(ch) => {
                 if let Some(ref path) = ch.path {
                     let path_str = path.display().to_string();
                     let content = ch.content.clone();
