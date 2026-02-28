@@ -41,7 +41,7 @@ tokio = { version = "1.42", features = ["rt-multi-thread"] }
 
 [dev-dependencies]
 pretty_assertions = "1"
-toml = "0.9"
+toml = "1.0"
 
 [workspace]
 members = ["xtask"]
