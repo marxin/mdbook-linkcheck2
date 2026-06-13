@@ -63,6 +63,14 @@ follow-web-links = false
 # may help prevent linking to sensitive files (e.g. "../../../../etc/shadow")
 traverse-parent-directories = false
 
+# Turns on support for Latex. If true, then the Latex fragments will be
+# cut off before the file is processed for link consistency.
+latex-support = true
+
+# Turns on support for Katex. If true, then the Katex fragments will be
+# cut off before the file is processed for link consistency.
+katex-support = true
+
 # If necessary, you can exclude one or more links from being checked with a
 # list of regular expressions. The regex will be applied to the link href (i.e.
 # the `./index.html` in `[some page](./index.html)`) so it can be used to

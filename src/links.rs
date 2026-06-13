@@ -1,6 +1,6 @@
 use crate::{
     config::Config,
-    latex::{filter_out_latex, ByteIndexMap},
+    latex::{filter_out_latex_or_katex, ByteIndexMap},
 };
 use codespan::{ByteIndex, FileId, Files, Span};
 use linkcheck2::Link;
@@ -23,8 +23,8 @@ where
     for file_id in target_files {
         let src = files.source(file_id);
 
-        let (src, byte_index_map) = if cfg.latex_support {
-            filter_out_latex(src)
+        let (src, byte_index_map) = if cfg.latex_support || cfg.katex_support {
+            filter_out_latex_or_katex(src, cfg)
         } else {
             (src.clone(), ByteIndexMap::new())
         };
