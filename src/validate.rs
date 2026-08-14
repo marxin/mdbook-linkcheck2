@@ -31,15 +31,19 @@ fn lc_validate(
         .map(|id| files.name(*id).to_os_string())
         .collect();
 
-    let options = Options::default()
+    let mut options = Options::default()
         .with_root_directory(&src_dir)
         .expect("The source directory doesn't exist?")
-        .set_alternate_extensions(vec![("html".to_string(), vec!["md".to_string()])])
         .set_links_may_traverse_the_root_directory(cfg.traverse_parent_directories)
         // take into account the `index` preprocessor which rewrites `README.md`
         // to `index.md` (which tne gets rendered as `index.html`)
         .set_default_file("README.md")
         .set_custom_validation(ensure_included_in_book(src_dir.clone(), file_names));
+
+    if !cfg.require_md_extension {
+        options =
+            options.set_alternate_extensions(vec![("html".to_string(), vec!["md".to_string()])]);
+    }
 
     let interpolated_headers = cfg.interpolate_headers(cfg.warning_policy);
 
@@ -50,11 +54,21 @@ fn lc_validate(
         cache: Mutex::new(cache.clone()),
         interpolated_headers,
     };
-    let links = collate_links(links, &src_dir, files);
+    let (extension_errors, links): (Vec<_>, Vec<_>) = links
+        .iter()
+        .cloned()
+        .partition(|link| requires_markdown_extension(link, cfg));
+    let links = collate_links(&links, &src_dir, files);
 
     let runtime = Builder::new_multi_thread().enable_all().build().unwrap();
     let got = runtime.block_on(async {
         let mut outcomes = Outcomes::default();
+        outcomes
+            .invalid
+            .extend(extension_errors.into_iter().map(|link| InvalidLink {
+                link,
+                reason: Reason::Io(std::io::Error::other(MarkdownExtensionRequired)),
+            }));
 
         for (current_dir, mut links) in links {
             // Skip web links for files not included in filter selection
@@ -78,6 +92,31 @@ fn lc_validate(
         .expect("We statically know this isn't used");
     got
 }
+
+fn requires_markdown_extension(link: &Link, cfg: &Config) -> bool {
+    cfg.require_md_extension
+        && !cfg.should_skip(&link.href)
+        && matches!(
+            link.category(),
+            Some(Category::FileSystem { path, .. })
+                if path.extension() == Some(OsStr::new("html"))
+        )
+}
+
+/// An error emitted when `require-md-extension` rejects a local `.html` link.
+#[derive(Debug, Copy, Clone)]
+pub struct MarkdownExtensionRequired;
+
+impl Display for MarkdownExtensionRequired {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "Local links must use the `.md` extension because `require-md-extension` is enabled"
+        )
+    }
+}
+
+impl std::error::Error for MarkdownExtensionRequired {}
 
 fn ensure_included_in_book(
     src_dir: PathBuf,
