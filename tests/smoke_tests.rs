@@ -53,6 +53,35 @@ fn check_all_links_in_a_valid_book() {
 }
 
 #[test]
+fn require_markdown_extensions_for_local_links() {
+    let root = test_dir().join("all-green");
+    let config = Config {
+        require_md_extension: true,
+        ..Default::default()
+    };
+
+    TestRun::new_with_config(root, config)
+        .after_validation(|files, output, _| {
+            let broken: Vec<_> = output
+                .invalid_links
+                .iter()
+                .map(|invalid| invalid.link.href.to_string())
+                .collect();
+
+            assert_same_links(["./chapter_1.html"], broken);
+            assert!(is_specific_error::<
+                mdbook_linkcheck2::MarkdownExtensionRequired,
+            >(&output.invalid_links[0].reason));
+
+            let diagnostics = output.generate_diagnostics(files, WarningPolicy::Error);
+            assert!(diagnostics.iter().any(|diagnostic| diagnostic.message
+                == "Local links must use the `.md` extension because `require-md-extension` is enabled"));
+        })
+        .execute()
+        .unwrap();
+}
+
+#[test]
 fn correctly_find_broken_links() {
     let root = test_dir().join("broken-links");
     let expected = &[

@@ -63,6 +63,9 @@ follow-web-links = false
 # may help prevent linking to sensitive files (e.g. "../../../../etc/shadow")
 traverse-parent-directories = false
 
+# Require local links to Markdown files to use `.md` rather than `.html`.
+require-md-extension = false
+
 # If necessary, you can exclude one or more links from being checked with a
 # list of regular expressions. The regex will be applied to the link href (i.e.
 # the `./index.html` in `[some page](./index.html)`) so it can be used to
