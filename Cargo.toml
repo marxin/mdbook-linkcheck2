@@ -1,6 +1,6 @@
 [package]
 name = "mdbook-linkcheck2"
-version = "0.12.2"
+version = "0.13.0"
 authors = [
     "Michael Bryan <michaelfbryan@gmail.com>",
     "Martin Liška <martin.liska@hey.com>",
