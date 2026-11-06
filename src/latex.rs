@@ -151,10 +151,15 @@ pub(crate) fn filter_out_latex(src: &str) -> (String, ByteIndexMap) {
     // Everything between a pair of $ excluding newlines
     process_regex(r"\$[^\$\n\r]*\$", "LATEX_SINGLE_DOLLAR_SUBSTITUTED");
     // Everything between \( and \) excluding newlines
-    process_regex(r"\\\([^\n\r]*\\\)", "LATEX_ESCAPED_PARENTHESIS_SUBSTITUTED");
-    // Everything between \[ and \] including newlines
+    // Inline equations are delimited by \\( and \\) in mdbook.
     process_regex(
-        r"\\\[(.|\r\n|\r|\n)*\\\]",
+        r"\\{1,2}\([^\n\r]*\\{1,2}\)",
+        "LATEX_ESCAPED_PARENTHESIS_SUBSTITUTED",
+    );
+    // Everything between \[ and \] including newlines
+    // Block equations are delimited by \\[ and \\] in mdbook.
+    process_regex(
+        r"(?s)\\{1,2}\[.*?\\{1,2}\]",
         "LATEX_ESCAPED_SQUARE_BRACKET_SUBSTITUTED",
     );
 

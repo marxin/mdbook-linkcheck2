@@ -33,3 +33,13 @@ must not be cut out, no matter how many $ we talk about.
 [incomplete link]
 
 ![Missing Image](./asdf.png)
+
+### Inline equations
+Inline equations are delimited by `\\(` and `\\)`.
+The following inline equation \\( \int x dx = \frac{x^2}{2} + C \\) shouldn't show warning.
+
+### Block equations
+Block equations are delimited by `\\[` and `\\]`. 
+The following equation shouldn't show warning:
+
+\\[ \mu = \frac{1}{N} \sum_{i=0} x_i \\]
