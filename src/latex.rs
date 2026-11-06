@@ -159,7 +159,7 @@ pub(crate) fn filter_out_latex(src: &str) -> (String, ByteIndexMap) {
     // Everything between \[ and \] including newlines
     // Block equations are delimited by \\[ and \\] in mdbook.
     process_regex(
-        r"\\{1,2}\[(?s).*?\\{1,2}\]",
+        r"(?s)\\{1,2}\[.*?\\{1,2}\]",
         "LATEX_ESCAPED_SQUARE_BRACKET_SUBSTITUTED",
     );
 
